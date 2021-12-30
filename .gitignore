@@ -1,5 +1,5 @@
 .jmix
-
+jdbc:hsqldb:file:.jmix
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
