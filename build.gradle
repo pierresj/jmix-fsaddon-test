@@ -23,6 +23,25 @@ repositories {
     }
 }
 
+
+
+
+bootRun{
+    File mySecretPropertiesFile=rootProject.file("mysecrets.properties")
+    File publicSecretPropertiesFile=rootProject.file("secrets.properties")
+    File secretPropertiesFile=null;
+    if (mySecretPropertiesFile.exists()){
+        secretPropertiesFile=mySecretPropertiesFile
+    }else if(publicSecretPropertiesFile.exists()) {
+        secretPropertiesFile=publicSecretPropertiesFile
+    }else {
+        throw new RuntimeException("没有找到隐私属性文件")
+    }
+    Properties secretProperties=new Properties();
+    secretProperties.load(new FileInputStream(secretPropertiesFile))
+    systemProperties(secretProperties)
+}
+
 dependencies {
     implementation 'io.jmix.core:jmix-core-starter'
     implementation 'io.jmix.data:jmix-eclipselink-starter'
