@@ -1,45 +1,50 @@
 plugins {
-    id 'io.jmix' version '1.1.3'
+    id 'io.jmix' version '1.2.0'
     id 'java'
 }
 
 apply plugin: 'org.springframework.boot'
 
 jmix {
-    bomVersion = '1.1.1'
+    bomVersion = '1.2.1'
 }
 
 group = 'com.company'
 version = '0.0.1-SNAPSHOT'
 
+bootRun {
+    File mySecretPropertiesFile = rootProject.file("mysecrets.properties")
+    File publicSecretPropertiesFile = rootProject.file("secrets.properties")
+    File secretPropertiesFile = null;
+    if (mySecretPropertiesFile.exists()) {
+        secretPropertiesFile = mySecretPropertiesFile
+    } else if (publicSecretPropertiesFile.exists()) {
+        secretPropertiesFile = publicSecretPropertiesFile
+    } else {
+        throw new RuntimeException("没有找到隐私属性文件")
+    }
+    Properties secretProperties = new Properties();
+    secretProperties.load(new FileInputStream(secretPropertiesFile))
+    systemProperties(secretProperties)
+}
+
 repositories {
     mavenCentral()
-    mavenLocal()
     maven {
         url 'https://maven.aliyun.com/nexus/content/groups/public/'
     }
     maven {
         url 'https://global.repo.jmix.io/repository/public'
     }
-}
-
-
-
-
-bootRun{
-    File mySecretPropertiesFile=rootProject.file("mysecrets.properties")
-    File publicSecretPropertiesFile=rootProject.file("secrets.properties")
-    File secretPropertiesFile=null;
-    if (mySecretPropertiesFile.exists()){
-        secretPropertiesFile=mySecretPropertiesFile
-    }else if(publicSecretPropertiesFile.exists()) {
-        secretPropertiesFile=publicSecretPropertiesFile
-    }else {
-        throw new RuntimeException("没有找到隐私属性文件")
+    maven {
+        url = uri("https://maven.pkg.github.com/pierresj/jmix-huaweifs")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            //username = "pierresj"
+            //password = "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"
+        }
     }
-    Properties secretProperties=new Properties();
-    secretProperties.load(new FileInputStream(secretPropertiesFile))
-    systemProperties(secretProperties)
 }
 
 dependencies {
@@ -52,7 +57,7 @@ dependencies {
     implementation 'io.jmix.security:jmix-security-starter'
     implementation 'io.jmix.security:jmix-security-ui-starter'
     implementation 'io.jmix.security:jmix-security-data-starter'
-    implementation 'io.github.pierresj:jmix-huaweifs-starter:0.0.3-RELEASE'
+    implementation 'io.github.pierresj:jmix-huaweifs-starter:1.0.7'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
