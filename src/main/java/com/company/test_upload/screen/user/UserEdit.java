@@ -1,9 +1,9 @@
 package com.company.test_upload.screen.user;
 
 import com.company.test_upload.entity.User;
+import io.github.pierresj.qiniufs.QiniuFileStorage;
 import io.jmix.core.EntityStates;
 import io.jmix.core.FileRef;
-import io.jmix.core.FileStorage;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.component.*;
 import io.jmix.ui.navigation.Route;
@@ -57,7 +57,7 @@ public class UserEdit extends StandardEditor<User> {
     private TemporaryStorage temporaryStorage;
 
     @Autowired
-    private FileStorage fileStorage;
+    private QiniuFileStorage qiniuFileStorage;
 
     @Subscribe
     public void onInitEntity(InitEntityEvent<User> event) {
@@ -102,7 +102,8 @@ public class UserEdit extends StandardEditor<User> {
         InputStream fileInputStream = new FileInputStream(file);
 
         //FileRef fileRef = temporaryStorage.putFileIntoStorage(manuallyControlledField.getFileId(), event.getFileName());
-        FileRef fileRef = fileStorage.saveStream(event.getFileName(), fileInputStream);
+        //FileRef fileRef = fileStorage.saveStream(event.getFileName(), fileInputStream);
+        FileRef fileRef = qiniuFileStorage.saveStream(event.getFileName(), fileInputStream);
 
         manuallyControlledField.setValue(fileRef);
         notifications.create()

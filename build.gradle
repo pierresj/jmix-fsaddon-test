@@ -28,25 +28,6 @@ bootRun {
     systemProperties(secretProperties)
 }
 
-repositories {
-    mavenCentral()
-    maven {
-        url 'https://maven.aliyun.com/nexus/content/groups/public/'
-    }
-    maven {
-        url 'https://global.repo.jmix.io/repository/public'
-    }
-    maven {
-        url = uri("https://maven.pkg.github.com/pierresj/jmix-huaweifs")
-        credentials {
-            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-            password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
-            //username = "pierresj"
-            //password = "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"
-        }
-    }
-}
-
 dependencies {
     implementation 'io.jmix.core:jmix-core-starter'
     implementation 'io.jmix.data:jmix-eclipselink-starter'
@@ -58,6 +39,7 @@ dependencies {
     implementation 'io.jmix.security:jmix-security-ui-starter'
     implementation 'io.jmix.security:jmix-security-data-starter'
     implementation 'io.github.pierresj:jmix-huaweifs-starter:1.0.7'
+    implementation 'io.github.pierresj:jmix-qiniufs-starter:1.0.2'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
@@ -66,6 +48,32 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://maven.aliyun.com/nexus/content/groups/public/'
+    }
+    maven {
+        url 'https://global.repo.jmix.io/repository/public'
+    }
+    maven {
+        url = uri("https://maven.pkg.github.com/pierresj/jmix-qiniufs")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+        }
+    }
+    maven {
+        url = uri("https://maven.pkg.github.com/pierresj/jmix-huaweifs")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+        }
+    }
+
+
 }
 
 test {
